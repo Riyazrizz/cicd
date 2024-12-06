@@ -14,18 +14,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # # Step 2: Set up Ansible
-      # - name: Install Ansible
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install -y ansible
+      # Step 2: Install Ansible
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
 
-      # # Step 3: Install dependencies
-      # - name: Install dependencies
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y python3-pip
-      #     pip3 install boto3 ansible
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install boto3 ansible
 
       # Step 4: Add SSH private key for EC2
       - name: Add SSH private key
@@ -37,17 +37,8 @@ jobs:
           cd 'Task 2'
           ls
           chmod 600 P.pem
-
-      # Step 5: Create Ansible inventory file
-      - name: Create Ansible inventory file
-        run: |
           echo "[ec2_instances]" > inventory.ini
           echo "54.194.37.244 ansible_user=ubuntu ansible_ssh_private_key_file=cicd/'Task 2'/P.pem" >> inventory.ini
-
-      # Step 6: Run Ansible Playbook with SSH debugging
-      - name: Run Ansible Playbook
-        run: |
-          cd 'Task 2'  # Ensure this directory contains the playbook
           ansible-playbook -i ../inventory.ini install_docker.yml -vvv
         env:
           ANSIBLE_HOST_KEY_CHECKING: "false"  # Disable host key checking for EC2 instance
