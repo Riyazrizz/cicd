@@ -1,0 +1,42 @@
+---
+- name: Deploy Docker Container on EC2
+  hosts: all
+  become: yes
+  vars:
+    github_repo: "https://github.com/Riyazrizz/cicd.git"  # Your GitHub repo URL
+    docker_image_name: "myapp_image"  # Docker image name
+    docker_container_name: "myapp_container"  # Docker container name
+
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+    
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Clone the GitHub repository
+      git:
+        repo: "{{ github_repo }}"
+        dest: /home/ubuntu/myapp
+        version: master
+
+    - name: Build Docker image from Dockerfile
+      docker_image:
+        path: /home/ubuntu/myapp
+        name: "{{ docker_image_name }}"
+        tag: latest
+
+    - name: Run the Docker container
+      docker_container:
+        name: "{{ docker_container_name }}"
+        image: "{{ docker_image_name }}:latest"
+        state: started
+        restart_policy: always
+        ports:
+          - "80:80"  # Adjust port mapping as needed
