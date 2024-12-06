@@ -14,24 +14,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Ansible
-      - name: Install Ansible
-        run: |
-          sudo apt update
-          sudo apt install -y ansible
+      # # Step 2: Set up Ansible
+      # - name: Install Ansible
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install -y ansible
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip
-          pip3 install boto3 ansible
+      # # Step 3: Install dependencies
+      # - name: Install dependencies
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y python3-pip
+      #     pip3 install boto3 ansible
 
       # Step 4: Add SSH private key for EC2
       - name: Add SSH private key
         env:
           EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}  # Secret containing the private key
         run: |
+          ls
+          pwd
           cd cicd/'Task 2'/
           chmod 600 P.pem
 
