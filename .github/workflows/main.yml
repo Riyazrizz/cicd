@@ -31,7 +31,7 @@ jobs:
         run: |
           pwd
           ls
-          cd 'Part 2'
+          cd 'Task 2'
           ansible-playbook -i "54.194.37.244" --private-key P.pem --user ubuntu --extra-vars "github_repo=https://github.com/Riyazrizz/cicd.git docker_image_name=myapp_image docker_container_name=myapp_container" install_docker.yml
         env:
           ANSIBLE_HOST_KEY_CHECKING: "false"  # Disable host key checking for EC2 instance
