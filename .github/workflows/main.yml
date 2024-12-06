@@ -34,7 +34,7 @@ jobs:
         run: |
           ls
           pwd
-          cd cicd/'Task 2'/
+          cd 'Task 2'
           chmod 600 P.pem
 
       # Step 5: Create Ansible inventory file
