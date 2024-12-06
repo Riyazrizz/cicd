@@ -36,16 +36,16 @@ jobs:
           echo "$EC2_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      # Step 5: Set up the inventory file
+      # Step 5: Create Ansible inventory file
       - name: Create Ansible inventory file
         run: |
           echo "[ec2_instances]" > inventory.ini
           echo "54.194.37.244 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa" >> inventory.ini
 
-      # Step 6: Run Ansible Playbook
+      # Step 6: Run Ansible Playbook with SSH debugging
       - name: Run Ansible Playbook
         run: |
           cd 'Task 2'  # Ensure this directory contains the playbook
-          ansible-playbook -i ../inventory.ini install_docker.yml
+          ansible-playbook -i ../inventory.ini install_docker.yml -vvv
         env:
           ANSIBLE_HOST_KEY_CHECKING: "false"  # Disable host key checking for EC2 instance
