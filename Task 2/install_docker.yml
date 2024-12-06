@@ -1,11 +1,13 @@
 ---
 - name: Deploy Docker Container on EC2
-  hosts: all
+  hosts: ec2_instances  # Should match the inventory group name
   become: yes
   vars:
-    github_repo: "https://github.com/Riyazrizz/cicd.git"  # Your GitHub repo URL
-    docker_image_name: "myapp_image"  # Docker image name
-    docker_container_name: "myapp_container"  # Docker container name
+    github_repo: "https://github.com/Riyazrizz/cicd.git"
+    docker_image_name: "myapp_image"
+    docker_container_name: "myapp_container"
+    repo_dest: "/home/ubuntu/myapp"
+    dockerfile_dir: "/home/ubuntu/myapp/Task 2"  # Correct Dockerfile path
 
   tasks:
     - name: Install Docker
@@ -23,12 +25,13 @@
     - name: Clone the GitHub repository
       git:
         repo: "{{ github_repo }}"
-        dest: /home/ubuntu/myapp
+        dest: "{{ repo_dest }}"
         version: master
+        force: yes
 
     - name: Build Docker image from Dockerfile
       docker_image:
-        path: /home/ubuntu/myapp/cicd/Task 2
+        path: "{{ dockerfile_dir }}"
         name: "{{ docker_image_name }}"
         tag: latest
 
@@ -39,4 +42,4 @@
         state: started
         restart_policy: always
         ports:
-          - "80:80"  # Adjust port mapping as needed
+          - "80:80"
