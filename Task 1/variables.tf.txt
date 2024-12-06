@@ -1,0 +1,25 @@
+# AWS Region
+variable "region" {
+  description = "AWS region to deploy resources"
+  type        = string
+  default     = "us-west-2"
+}
+
+# EC2 Instance Type
+variable "instance_type" {
+  description = "Instance type for the EC2 instance"
+  type        = string
+  default     = "t2.micro"
+}
+
+# AMI ID for the EC2 instance
+variable "ami_id" {
+  description = "AMI ID for the EC2 instance"
+  type        = string
+}
+
+# SSH Key Name
+variable "key_name" {
+  description = "SSH key pair name for accessing the EC2 instance"
+  type        = string
+}

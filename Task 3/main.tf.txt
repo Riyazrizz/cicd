@@ -1,0 +1,24 @@
+provider "aws" {
+  region = "us-west-2"
+}
+
+resource "aws_instance" "app_server" {
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2 AMI ID
+  instance_type = "t2.micro"
+  key_name      = "<your_key_name>"
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum update -y",
+      "sudo amazon-linux-extras install docker -y",
+      "sudo service docker start",
+      "sudo usermod -a -G docker ec2-user",
+      "docker pull <your_docker_image>",   # Replace with your Docker image
+      "docker run -d -p 80:80 <your_docker_image>"
+    ]
+  }
+
+  tags = {
+    Name = "DockerAppServer"
+  }
+}

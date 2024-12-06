@@ -1,0 +1,47 @@
+---
+- name: Configure Web Server and Install Docker
+  hosts: web_server
+  become: true
+
+  tasks:
+    - name: Update apt package index (Ubuntu-based systems)
+      apt:
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Update yum package index (Amazon Linux)
+      yum:
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install Docker (Amazon Linux)
+      yum:
+        name: docker
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add user to the Docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Verify Docker installation
+      command: docker --version
+      register: docker_version_output
+
+    - name: Show Docker version
+      debug:
+        msg: "{{ docker_version_output.stdout }}"

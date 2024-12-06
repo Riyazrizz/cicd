@@ -1,0 +1,33 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: '<your_container_registry_service_connection>'
+      repository: '<your_repo_name>'
+      command: buildAndPush
+      Dockerfile: '**/Dockerfile'
+      tags: |
+        $(Build.BuildId)
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: '<your_azure_subscription>'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az acr login --name <your_container_registry>
+        az container create --resource-group <your_resource_group> --name <container_name> \
+          --image <your_acr>.azurecr.io/<your_repo_name>:$(Build.BuildId) --dns-name-label <unique_label> \
+          --ports 80
