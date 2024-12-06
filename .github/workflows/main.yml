@@ -15,8 +15,10 @@ jobs:
         uses: actions/checkout@v3
 
       # Step 2: Set up Ansible
-      - name: Set up Ansible
-        run: sudo apt install ansible
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -25,12 +27,25 @@ jobs:
           sudo apt-get install -y python3-pip
           pip3 install boto3 ansible
 
+      # Step 4: Add SSH private key for EC2
+      - name: Add SSH private key
+        env:
+          EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}  # Secret containing the private key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$EC2_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-      # Step 5: Run Ansible Playbook
+      # Step 5: Set up the inventory file
+      - name: Create Ansible inventory file
+        run: |
+          echo "[ec2_instances]" > inventory.ini
+          echo "54.194.37.244 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa" >> inventory.ini
+
+      # Step 6: Run Ansible Playbook
       - name: Run Ansible Playbook
-        run: |          
-          cd 'Task 2'
-          ls
-          ansible-playbook -i "54.194.37.244" --private-key P.pem install_docker.yml
+        run: |
+          cd 'Task 2'  # Ensure this directory contains the playbook
+          ansible-playbook -i ../inventory.ini install_docker.yml
         env:
           ANSIBLE_HOST_KEY_CHECKING: "false"  # Disable host key checking for EC2 instance
