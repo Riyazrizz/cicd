@@ -28,7 +28,7 @@
 
     - name: Build Docker image from Dockerfile
       docker_image:
-        path: /home/ubuntu/myapp
+        path: /home/ubuntu/myapp/cicd/Task 2
         name: "{{ docker_image_name }}"
         tag: latest
 
