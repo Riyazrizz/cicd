@@ -36,8 +36,7 @@ jobs:
           ls
           chmod 600 P.pem
           echo "[ec2_instances]" > inventory.ini
-          echo "54.194.37.244 ansible_user=ubuntu ansible_ssh_private_key_file=cicd/'Task 2'/P.pem" >> inventory.ini
-          ansible-playbook -i host.ini "install_docker.yml" -vvv
+          ansible-playbook -i inventory.ini install_docker.yml -vvv --ssh-extra-args="-o StrictHostKeyChecking=no"
         env:
           EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}  # Secret containing the private key
           ANSIBLE_HOST_KEY_CHECKING: "false"  # Disable host key checking for EC2 instance
