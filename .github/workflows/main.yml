@@ -16,9 +16,7 @@ jobs:
 
       # Step 2: Set up Ansible
       - name: Set up Ansible
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          ansible_version: 'latest'
+        run: sudo apt install ansible
 
       # Step 3: Install dependencies
       - name: Install dependencies
