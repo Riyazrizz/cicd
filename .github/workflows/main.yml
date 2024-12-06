@@ -32,15 +32,14 @@ jobs:
         env:
           EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}  # Secret containing the private key
         run: |
-          mkdir -p ~/.ssh
-          echo "$EC2_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          cd cicd/Task 2/
+          chmod 600 P.pem
 
       # Step 5: Create Ansible inventory file
       - name: Create Ansible inventory file
         run: |
           echo "[ec2_instances]" > inventory.ini
-          echo "54.194.37.244 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa" >> inventory.ini
+          echo "54.194.37.244 ansible_user=ubuntu ansible_ssh_private_key_file=cicd/Task 2/P.pem" >> inventory.ini
 
       # Step 6: Run Ansible Playbook with SSH debugging
       - name: Run Ansible Playbook
